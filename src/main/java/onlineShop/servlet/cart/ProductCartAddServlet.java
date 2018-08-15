@@ -28,11 +28,9 @@ public class ProductCartAddServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int productId = getProductId(req);
         User user = (User) req.getSession().getAttribute("user");
-        if(productId == 1 || productCartManager.exists(user.getId(),productId)){
-            resp.sendRedirect("/");
-        }else {
+        if(productId != -1 && !productCartManager.exists(user.getId(),productId)){
             productCartManager.save(user.getId(),productId);
-            resp.sendRedirect("/product/one/" + productId);
+            resp.getWriter().print(true);
         }
     }
 

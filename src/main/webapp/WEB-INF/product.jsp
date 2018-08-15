@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/resources/plugins/photoswipe/photoswipe.min.css">
     <link rel="stylesheet" href="/resources/plugins/photoswipe/photoswipe-default-skin/default-skin.min.css">
     <link rel="stylesheet" href="/resources/dist/css/style.css">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Porduct</title>
 </head>
 <body>
@@ -62,7 +62,7 @@
             <li class="nav-item dropdown ml-1 ml-sm-3">
                 <a href="grid.html#" class="nav-link" data-toggle="modal" data-target="#cartModal">
                     <i class="fa fa-shopping-cart fa-lg"></i>
-                    <span class="badge badge-pink badge-count">${cartCount}</span>
+                    <span id="cart-count" class="badge badge-pink badge-count">${cartCount}</span>
                 </a>
             </li>
         </c:if>
@@ -200,13 +200,13 @@
                         </div>
                     </c:forEach>
                     <c:if test="${user != null && user.id != product.user.id}">
-                        <form action="/product/cart/add" method="post">
-                            <input type="hidden" name="productId" value="${product.id}">
+                        <form action="/product/cart/add"  method="post">
+                            <input type="hidden" id="productId" value="${product.id}">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-info btn-block">ADD TO CART</button>
+                                <button id="cart-button" type="submit" class="btn btn-info btn-block">ADD TO CART</button>
                             </div>
                         </form>
-                        <form action="/product/order/add" method="post">
+                        <form action="/product/order/add"  method="post">
                             <input type="hidden" name="productId" value="${product.id}">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info btn-block">MAKE A ORDER</button>
@@ -262,8 +262,8 @@
                                                             <a href="/product/one/${product.id}"
                                                                class="card-title h6">${product.title}</a>
                                                             <c:if test="${user == null || user.id != product.user.id}">
-                                                                <form action="/product/cart/add" method="post">
-                                                                    <input type="hidden" name="productId"
+                                                                <form class="cart-form" action="/product/cart/add" method="post">
+                                                                    <input type="hidden" class="cart-input"
                                                                            value="${product.id}">
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <button type="submit"
@@ -298,8 +298,8 @@
                                                             <a href="/product/one/${product.id}"
                                                                class="card-title h6">${product.title}</a>
                                                             <c:if test="${user == null || user.id != product.user.id}">
-                                                                <form action="/product/cart/add" method="post">
-                                                                    <input type="hidden" name="productId"
+                                                                <form action="/product/cart/add" class="cart-form" method="post">
+                                                                    <input type="hidden" class="cart-input"
                                                                            value="${product.id}">
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <button type="submit"
@@ -495,5 +495,6 @@
 <script src="/resources/plugins/photoswipe/photoswipe.min.js"></script>
 <script src="/resources/plugins/photoswipe/photoswipe-ui-default.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/product.js"></script>
 </body>
 </html>
