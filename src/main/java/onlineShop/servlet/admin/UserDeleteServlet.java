@@ -1,5 +1,6 @@
 package onlineShop.servlet.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import onlineShop.manager.UserManager;
 import onlineShop.model.User;
 
@@ -22,12 +23,16 @@ public class UserDeleteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        resp.setContentType("application/json");
         int userId = getUserId(req);
         User user;
         if(userId  != -1 && (user = userManager.getById(userId)) != null){
             userManager.deleteById(user);
+            objectMapper.writeValue(resp.getWriter(),true);
+        }else {
+            objectMapper.writeValue(resp.getWriter(),false);
         }
-        resp.sendRedirect("/admin");
     }
 
     private int getUserId(HttpServletRequest request){

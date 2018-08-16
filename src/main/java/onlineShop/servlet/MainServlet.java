@@ -1,6 +1,5 @@
 package onlineShop.servlet;
 
-import onlineShop.manager.CategoryManager;
 import onlineShop.manager.ProductCartManager;
 import onlineShop.manager.ProductManager;
 import onlineShop.manager.ProductOrderManager;
@@ -20,9 +19,6 @@ import java.util.List;
 @WebServlet(urlPatterns = "")
 public class MainServlet extends HttpServlet implements Pages {
 
-    private static final int PAGE_SIZE = 8;
-
-    private CategoryManager categoryManager;
 
     private ProductManager productManager;
 
@@ -32,7 +28,6 @@ public class MainServlet extends HttpServlet implements Pages {
 
     @Override
     public void init() throws ServletException {
-        categoryManager = (CategoryManager) getServletContext().getAttribute("categoryManager");
         productManager = (ProductManager) getServletContext().getAttribute("productManager");
         productCartManager = (ProductCartManager) getServletContext().getAttribute("productCartManager");
         productOrderManager = (ProductOrderManager) getServletContext().getAttribute("productOrderManager");
@@ -45,12 +40,7 @@ public class MainServlet extends HttpServlet implements Pages {
             resp.sendRedirect("/admin");
             return;
         }
-        int length = getPaginationLength();
-        int pageNumber = getPageNumber(req,length);
-        req.setAttribute("products",productManager.getAllByLimit(pageNumber * PAGE_SIZE,PAGE_SIZE));
-        req.setAttribute("pageNumber",pageNumber);
-        req.setAttribute("length",length);
-        req.setAttribute("categories",categoryManager.getAll());
+
         if(user != null){
             req.setAttribute("cartCount",productCartManager.countByUserId(user.getId()));
             req.setAttribute("ordersCount",productOrderManager.countByUserId(user.getId()));
@@ -61,32 +51,7 @@ public class MainServlet extends HttpServlet implements Pages {
         req.getRequestDispatcher(INDEX).forward(req,resp);
     }
 
-    private int getPaginationLength() {
-        int count = productManager.countALl();
-        int length;
-        if(count <= PAGE_SIZE){
-            length = 1;
-        } else if(count % PAGE_SIZE != 0){
-            length = (count/PAGE_SIZE) + 1;
-        }else {
-            length = (count/PAGE_SIZE);
-        }
-        return length;
-    }
 
-    private int getPageNumber(HttpServletRequest req,int length) {
-        String strNumber = req.getParameter("page");
-        int pageNumber;
-        try {
-            pageNumber = Integer.parseInt(strNumber);
-            if(pageNumber < 0 || pageNumber >= length){
-                pageNumber = 0;
-            }
-        }catch (NumberFormatException e){
-            pageNumber =0;
-        }
-        return pageNumber;
-    }
 
     private int getAllProductsPriceSum(List<Product> products){
         int sum=0;

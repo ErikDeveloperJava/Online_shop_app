@@ -1,7 +1,6 @@
 package onlineShop.servlet;
 
 import onlineShop.form.ImageForm;
-import onlineShop.manager.CategoryManager;
 import onlineShop.manager.UserManager;
 import onlineShop.model.User;
 import onlineShop.model.UserRole;
@@ -19,13 +18,10 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/register")
 public class RegisterServlet extends HttpServlet implements Pages {
 
-    private CategoryManager categoryManager;
-
     private UserManager userManager;
 
     @Override
     public void init() throws ServletException {
-        categoryManager = (CategoryManager) getServletContext().getAttribute("categoryManager");
         userManager = (UserManager) getServletContext().getAttribute("userManager");
     }
 
@@ -36,18 +32,14 @@ public class RegisterServlet extends HttpServlet implements Pages {
         Map<String,String> params = (Map<String, String>) req.getAttribute("params");
         User user = getCheckedUser(params,req);
         if(user == null){
-            req.setAttribute("categories",categoryManager.getAll());
             req.getRequestDispatcher(LOGIN).forward(req,resp);
         }else if(userManager.getByUsername(user.getUsername()) != null){
-            req.setAttribute("categories",categoryManager.getAll());
             req.setAttribute("usernameError","user with username '" + user.getUsername() +"' already exists");
             req.getRequestDispatcher(LOGIN).forward(req,resp);
         }else if(form.getBytes().length == 0){
-            req.setAttribute("categories",categoryManager.getAll());
             req.setAttribute("imageError","image file is empty");
             req.getRequestDispatcher(LOGIN).forward(req,resp);
         }else if(!ImageUtil.isValidFormat(form.getContentType())){
-            req.setAttribute("categories",categoryManager.getAll());
             req.setAttribute("imageError","wrong image format");
             req.getRequestDispatcher(LOGIN).forward(req,resp);
         }else {

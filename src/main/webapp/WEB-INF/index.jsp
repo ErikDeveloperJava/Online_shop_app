@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta id="isLoadCatBlog2"  content="true">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans">
     <link rel="stylesheet" href="/resources/plugins/_mod/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/resources/plugins/perfect-scrollbar/css/perfect-scrollbar.min.css">
@@ -58,7 +59,7 @@
             <li class="nav-item dropdown ml-1 ml-sm-3">
                 <a href="grid.html#" class="nav-link" data-toggle="modal" data-target="#cartModal">
                     <i class="fa fa-shopping-cart fa-lg"></i>
-                    <span class="badge badge-pink badge-count">${cartCount}</span>
+                    <span id="cart-count" class="badge badge-pink badge-count">${cartCount}</span>
                 </a>
             </li>
         </c:if>
@@ -94,9 +95,8 @@
                     Home</a>
                 <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
                         class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}" class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
+                <div id="cat-blog">
+                </div>
                 <a  class="list-group-item list-group-item-action"><i
                         class="fa fa-list fa-lg fa-fw"></i> Other</a>
                 <c:if test="${user == null}">
@@ -135,69 +135,16 @@
 
             <div class="d-flex justify-content-between">
                 <!-- Tags -->
-                <div class="btn-tags">
-                    <c:forEach items="${categories}" var="category">
-                        <a href="/category/${category.id}" class="btn btn-light btn-sm active">${category.name}</a>
-                    </c:forEach>
+                <div class="btn-tags" id="cat-blog2">
+
                 </div>
             </div>
 
             <!-- Grid -->
             <h3 class="title mt-4">New Products</h3>
-            <div class="row no-gutters gutters-2">
-                <c:forEach items="${products}" var="product">
-                    <div class="col-6 col-md-3 mb-2">
-                        <div class="card card-product">
-                            <div class="ribbon"><span class="bg-info text-white"></span></div>
-                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}" alt="NEW Microsoft Surface Go" class="card-img-top"></a>
-                            <div class="card-body">
-                                <span class="price">$${product.price}</span>
-                                <a href="/product/one/${product.id}" class="card-title h6">${product.title}</a>
-                                <c:if test="${user != null && product.user.id != user.id} ">
-                                <form action="/product/cart/add" method="post">
-                                    <input type="hidden" name="productId" value="${product.id}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                            <button type="submit" class="btn btn-outline-info btn-sm btn-block">Add to cart</button>
-                                    </div>
-                                </form>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-            <!-- /Grid -->
+            <div id="product-blog">
 
-            <!-- Pagination -->
-            <nav aria-label="Page navigation Shop Grid">
-                <ul class="pagination justify-content-center">
-                    <c:if test="${pageNumber == 0}">
-                        <li class="page-item disabled"><a class="page-link" style="cursor: pointer" tabindex="-1">Previous</a></li>
-                    </c:if>
-                    <c:if test="${pageNumber > 0}">
-                        <li class="page-item"><a class="page-link" href="/?page=${pageNumber -1}" tabindex="-1">Previous</a></li>
-                    </c:if>
-                    <c:forEach begin="0" end="${length - 1}" varStatus="status">
-                        <c:if test="${status.index == pageNumber}">
-                            <li class="page-item active"><a class="page-link" style="cursor: pointer">${pageNumber + 1}</a></li>
-                        </c:if>
-                        <c:if test="${status.index != pageNumber}">
-                            <li class="page-item"><a class="page-link" href="/?page=${status.index}">${status.index+1}</a></li>
-                        </c:if>
-                    </c:forEach>
-                    <c:if test="${pageNumber == (length-1)}">
-                        <li class="page-item  disabled">
-                            <a class="page-link" style="cursor: pointer">Next</a>
-                        </li>
-                    </c:if>
-                    <c:if test="${pageNumber < (length-1)}">
-                        <li class="page-item">
-                            <a class="page-link" href="/?page=${pageNumber + 1}">Next</a>
-                        </li>
-                    </c:if>
-                </ul>
-            </nav>
-            <!-- /Pagination -->
+            </div>
 
             <!-- Footer -->
             <div class="navbar navbar-expand navbar-light navbar-footer">
@@ -212,7 +159,8 @@
 
 <!-- Modal Cart -->
 <c:if test="${user != null}">
-    <div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -221,21 +169,24 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div id="cart-blog" class="modal-body">
                     <c:forEach items="${cartProducts}" var="product">
                         <div class="media">
-                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}" width="50" height="50" alt="NEW Microsoft Surface Go"></a>
+                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}"
+                                                                      width="50" height="50"
+                                                                      alt="NEW Microsoft Surface Go"></a>
                             <div class="media-body">
-                                <a href="/product/one/${product.id}" title="NEW Microsoft Surface Go">${product.title}</a>
+                                <a href="/product/one/${product.id}"
+                                   title="NEW Microsoft Surface Go">${product.title}</a>
                                 <div class="input-spinner input-spinner-sm">
                                     <div class="btn-group-vertical">
                                         <button type="button" class="btn btn-light"></button>
                                         <button type="button" class="btn btn-light"></button>
                                     </div>
                                 </div>
-                                <span class="price">$${product.price}</span>
-                                <form action="/product/cart/delete" method="post">
-                                    <input type="hidden" name="productId" value="${product.id}">
+                                <span class="price" id="product-price">$${product.price}</span>
+                                <form class="cart-delete-form" action="/product/cart/delete" method="post">
+                                    <input type="hidden" class="productId" name="productId" value="${product.id}">
                                     <button type="submit" class="close" aria-label="Close"><i class="fa fa-trash-o"></i></button>
                                 </form>
                             </div>
@@ -244,14 +195,13 @@
                 </div>
                 <div class="modal-footer">
                     <div class="box-total">
-                        <h4>Subotal: <span class="price">$${sum}</span></h4>
+                        <h4>Subotal: <span class="price" id="subotal">$${sum}</span></h4>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </c:if>
-
 <!-- Modal filter -->
 <script src="/resources/plugins/jquery/jquery.min.js"></script>
 <script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -259,5 +209,10 @@
 <script src="/resources/plugins/nouislider/nouislider.min.js"></script>
 <script src="/resources/plugins/raty-fa/jquery.raty-fa.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/generic.js"></script>
+<script src="/resources/js/products.js"></script>
+<c:if test="${user != null}">
+    <script src="/resources/js/product.js"></script>
+</c:if>
 </body>
 </html>

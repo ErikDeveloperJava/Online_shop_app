@@ -17,56 +17,60 @@
     <script>
 
         $(document).ready(function () {
-            $("#login-tab").on("click",function () {
-                $("#register").attr("class","tab-pane fade");
-                $("#login").attr("class","tab-pane fade show active");;
+            $("#login-tab").on("click", function () {
+                $("#register").attr("class", "tab-pane fade");
+                $("#login").attr("class", "tab-pane fade show active");
+                $("#us").attr("id","usernameError");
+                $("#pas").attr("id","passwordError");
             })
-            $("#register-tab").on("click",function () {
-                $("#login").attr("class","tab-pane fade");
-                $("#register").attr("class","tab-pane fade show active");
+            $("#register-tab").on("click", function () {
+                $("#login").attr("class", "tab-pane fade");
+                $("#register").attr("class", "tab-pane fade show active");
+                $(".error_us").attr("id","us")
+                $(".error_pass").attr("id","pas")
             })
         })
     </script>
 </head>
 <div>
 
-<!--Header -->
-<header class="navbar navbar-expand navbar-light fixed-top">
+    <!--Header -->
+    <header class="navbar navbar-expand navbar-light fixed-top">
 
-    <!-- Toggle Menu -->
-    <span class="toggle-menu"><i class="fa fa-bars fa-lg"></i></span>
+        <!-- Toggle Menu -->
+        <span class="toggle-menu"><i class="fa fa-bars fa-lg"></i></span>
 
-    <!-- Logo -->
-    <a class="navbar-brand" href="/">
-        <img src="/resources/img/logo.svg" alt="Mimity">Online Shop
-    </a>
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+            <img src="/resources/img/logo.svg" alt="Mimity">Online Shop
+        </a>
 
-    <!-- Search Form -->
-    <form action="<c:url value="/product/search" />" method="post" class="form-inline form-search d-none d-sm-inline">
-        <div class="input-group">
-            <button class="btn btn-light btn-search-back" type="button"><i class="fa fa-arrow-left"></i></button>
-            <input type="text" class="form-control" name="title" placeholder="Search ..." aria-label="Search ...">
-            <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
-        </div>
-    </form>
+        <!-- Search Form -->
+        <form action="<c:url value="/product/search" />" method="post"
+              class="form-inline form-search d-none d-sm-inline">
+            <div class="input-group">
+                <button class="btn btn-light btn-search-back" type="button"><i class="fa fa-arrow-left"></i></button>
+                <input type="text" class="form-control" name="title" placeholder="Search ..." aria-label="Search ...">
+                <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
 
-</header>
-<!-- /Header -->
+    </header>
+    <!-- /Header -->
 
-<div class="container-fluid" id="main-container">
-    <div class="row">
+    <div class="container-fluid" id="main-container">
+        <div class="row">
 
-        <!-- Sidebar -->
-        <div class="col" id="main-sidebar">
-            <div class="list-group list-group-flush">
-                <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home fa-lg fa-fw"></i>
-                    Home</a>
-                <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
-                        class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}" class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
-                    <a  class="list-group-item list-group-item-action"><i
+            <!-- Sidebar -->
+            <div class="col" id="main-sidebar">
+                <div class="list-group list-group-flush">
+                    <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home fa-lg fa-fw"></i>
+                        Home</a>
+                    <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
+                            class="fa fa-th fa-lg fa-fw"></i> Categories</a>
+                    <div id="cat-blog">
+                    </div>
+                    <a class="list-group-item list-group-item-action"><i
                             class="fa fa-list fa-lg fa-fw"></i> Other</a>
                     <a href="/login-register" class="list-group-item list-group-item-action sub">Login/Register</a>
 
@@ -108,28 +112,27 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <form action="/login" method="post">
+                                                <form id="login-form" action="/login" method="post">
                                                     <div class="form-group text-center">Login to your account</div>
                                                     <c:if test="${loginError != null}">
                                                         <span style="color: red">${loginError}</span>
+                                                        <hr/>
                                                     </c:if>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" name="username" id="loginUsername"
+                                                        <span style="color: red" class="error_us" id="usernameError"></span>
+                                                        <br/>
+                                                        <input type="text" class="form-control" name="username"
+                                                               id="loginUsername"
                                                                placeholder="Username">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="password" class="form-control" name="password" id="loginPassword"
+                                                        <span style="color: red" class="error_pass" id="passwordError"></span>
+                                                        <br/>
+                                                        <input type="password" class="form-control" name="password"
+                                                               id="loginPassword"
                                                                placeholder="Password">
                                                     </div>
-                                                    <%--
-                                                    <div class="form-group">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                   id="remember">
-                                                            <label class="custom-control-label" for="remember">Remember
-                                                                me</label>
-                                                        </div>
-                                                    </div>--%>
+
                                                     <button type="submit" class="btn btn-success btn-block">LOGIN
                                                     </button>
                                                 </form>
@@ -160,42 +163,61 @@
                             <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
                                 <div class="card shadow-sm">
                                     <div class="card-body">
-                                        <form action="/register" method="post" enctype="multipart/form-data">
+                                        <form id="register-form" action="/register" method="post" enctype="multipart/form-data">
                                             <div class="form-row">
                                                 <div class="form-group col-sm-6">
-                                                    <label for="registerFirstName">Name</label>
-                                                    <input type="text" name="name" class="form-control" id="registerFirstName">
+                                                    <label for="name">Name</label>
+                                                    <input type="text" name="name" class="form-control"
+                                                           id="name">
                                                     <c:if test="${nameError != null}">
-                                                        <span style="color: red">${nameError}</span>
+                                                        <span style="color: red" id="nameError">${nameError}</span>
+                                                    </c:if>
+                                                    <c:if test="${nameError == null}">
+                                                        <span style="color: red" id="nameError"></span>
                                                     </c:if>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <label for="registerLastName">Surname</label>
-                                                    <input type="text" name="surname" class="form-control" id="registerLastName">
+                                                    <label for="surname">Surname</label>
+                                                    <input type="text" name="surname" class="form-control"
+                                                           id="surname">
                                                     <c:if test="${surnameError != null}">
-                                                        <span style="color: red">${surnameError}</span>
+                                                        <span style="color: red" id="surnameError">${surnameError}</span>
+                                                    </c:if>
+                                                    <c:if test="${surnameError == null}">
+                                                        <span style="color: red" id="surnameError"></span>
                                                     </c:if>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <label for="registerEmail">Username</label>
-                                                    <input type="text" name="username" class="form-control" id="registerEmail">
+                                                    <label for="username">Username</label>
+                                                    <input type="text" name="username" class="form-control"
+                                                           id="username">
                                                     <c:if test="${usernameError != null}">
-                                                        <span style="color: red">${usernameError}</span>
+                                                        <span style="color: red" id="usernameError">${usernameError}</span>
+                                                    </c:if>
+                                                    <c:if test="${usernameError == null}">
+                                                        <span style="color: red" id="usernameError"></span>
                                                     </c:if>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <label for="registerPhone">Password</label>
-                                                    <input type="password" name="password" class="form-control" id="registerPhone">
+                                                    <label for="password">Password</label>
+                                                    <input type="password" name="password" class="form-control"
+                                                           id="password">
                                                     <c:if test="${passwordError != null}">
-                                                        <span style="color: red">${passwordError}</span>
+                                                        <span style="color: red" id="passwordError">${passwordError}</span>
+                                                    </c:if>
+                                                    <c:if test="${passwordError == null}">
+                                                        <span style="color: red" id="passwordError"></span>
                                                     </c:if>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <input  type="file" name="image" id="file" class="inputfile" />
+                                                    <input type="file" name="image" id="file" class="inputfile"/>
                                                     <label for="file">Choose a photo</label>
                                                     <br/>
                                                     <c:if test="${imageError != null}">
-                                                        <span style="color: red">${imageError}</span>
+                                                        <span style="color: red" id="imageError">${imageError}</span>
+                                                    </c:if>
+                                                    <c:if test="${imageError == null}">
+                                                        <span style="color: red" id="imageError"></span>
                                                     </c:if>
                                                 </div>
                                                 <div class="form-group col-12">
@@ -214,9 +236,11 @@
         </div>
     </div>
 </div>
-    <script src="/resources/plugins/jquery/jquery.min.js"></script>
-    <script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
-    <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/plugins/jquery/jquery.min.js"></script>
+<script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
+<script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/login.js"></script>
+<script src="/resources/js/generic.js"></script>
 </body>
 </html>

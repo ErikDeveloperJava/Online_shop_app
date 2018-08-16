@@ -24,11 +24,9 @@ public class MultipartRequestParseFilter extends AbstractFilter {
 
     private Properties properties;
 
-    private CategoryManager categoryManager;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         properties = PropertiesUtil.load(FILE_NAME);
-        categoryManager = (CategoryManager) filterConfig.getServletContext().getAttribute("categoryManager");
     }
 
     public void filter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -36,7 +34,6 @@ public class MultipartRequestParseFilter extends AbstractFilter {
             filterChain.doFilter(request, response);
         } else {
             if (!ServletFileUpload.isMultipartContent(request)) {
-                request.setAttribute("categories",categoryManager.getAll());
                 request.setAttribute("imageError", "request does not multipart");
                 request.getRequestDispatcher(LOGIN).forward(request, response);
             } else {
@@ -60,7 +57,6 @@ public class MultipartRequestParseFilter extends AbstractFilter {
                     request.setAttribute("form",form);
                     filterChain.doFilter(request,response);
                 } catch (FileUploadException e) {
-                    request.setAttribute("categories",categoryManager.getAll());
                     request.setAttribute("imageError", "invalid multipart request");
                     request.getRequestDispatcher(LOGIN).forward(request, response);
                 }

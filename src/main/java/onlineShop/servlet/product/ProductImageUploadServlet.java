@@ -1,5 +1,6 @@
 package onlineShop.servlet.product;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import onlineShop.form.ImageForm;
 import onlineShop.manager.ImageManager;
 import onlineShop.manager.ProductManager;
@@ -31,20 +32,23 @@ public class ProductImageUploadServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        resp.setContentType("application/json");
         Map<String,String> params = (Map<String, String>) req.getAttribute("params");
         ImageForm form = (ImageForm) req.getAttribute("form");
         Product product;
         int productId = getProductId(params);
         if(productId == -1 || (product = productManager.getById(productId)) == null || form.getBytes().length == 0 ||
                 !ImageUtil.isValidFormat(form.getContentType())){
-            resp.sendRedirect("/");
+            objectMapper.writeValue(resp.getWriter(),new Image());
         }else {
             User user = (User) req.getSession().getAttribute("user");
             product.setUser(user);
             form.setName(System.currentTimeMillis() + form.getName().trim());
             String imageName = user.getUsername() + "/" + product.getId() + "/" + form.getName();
-            imageManager.save(new Image(0,imageName,product),form);
-            resp.sendRedirect("/product/one/" + productId);
+            Image image =  new Image(0,imageName,product);
+            imageManager.save(image,form);
+            objectMapper.writeValue(resp.getWriter(),image);
         }
     }
 

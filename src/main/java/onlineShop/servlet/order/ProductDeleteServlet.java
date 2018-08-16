@@ -1,5 +1,6 @@
 package onlineShop.servlet.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import onlineShop.manager.ProductManager;
 import onlineShop.manager.ProductOrderManager;
 import onlineShop.model.Product;
@@ -27,13 +28,17 @@ public class ProductDeleteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        resp.setContentType("application/json");
         int productId = getProductId(req);
         Product product;
         User user = (User) req.getSession().getAttribute("user");
         if(productId != -1 && productManager.getById(productId) != null){
             productOrderManager.delete(user.getId(),productId);
+            objectMapper.writeValue(resp.getWriter(),true);
+        }else {
+            objectMapper.writeValue(resp.getWriter(),false);
         }
-        resp.sendRedirect("/user/orders");
     }
 
     private int getProductId(HttpServletRequest request){

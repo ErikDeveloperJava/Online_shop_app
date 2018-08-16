@@ -17,7 +17,7 @@
 </head>
 <div>
 
-<!--Header -->
+    <!--Header -->
     <header class="navbar navbar-expand navbar-light fixed-top">
 
         <!-- Toggle Menu -->
@@ -27,7 +27,8 @@
         <a class="navbar-brand" href="/"><img src="/resources/img/logo.svg" alt="Mimity">Online Shop</a>
 
         <!-- Search Form -->
-        <form action="<c:url value="/product/search" />" method="post" class="form-inline form-search d-none d-sm-inline">
+        <form action="<c:url value="/product/search" />" method="post"
+              class="form-inline form-search d-none d-sm-inline">
             <div class="input-group">
                 <button class="btn btn-light btn-search-back" type="button"><i class="fa fa-arrow-left"></i></button>
                 <input type="text" class="form-control" name="title" placeholder="Search ..." aria-label="Search ...">
@@ -55,7 +56,8 @@
         </li>
         <!-- User Dropdown -->
         <div class="dropdown dropdown-user">
-            <a class="dropdown-toggle" style="cursor: pointer;" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="dropdown-toggle" style="cursor: pointer;" role="button" id="userDropdown" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
                 <img src="/resources/images/${user.imgUrl}" width="40px" alt="User">
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
@@ -66,22 +68,21 @@
         <!-- /User Dropdown -->
 
     </header>
-<!-- /Header -->
+    <!-- /Header -->
 
-<div class="container-fluid" id="main-container">
-    <div class="row">
+    <div class="container-fluid" id="main-container">
+        <div class="row">
 
-        <!-- Sidebar -->
-        <div class="col" id="main-sidebar">
-            <div class="list-group list-group-flush">
-                <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home fa-lg fa-fw"></i>
-                    Home</a>
-                <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
-                        class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}" class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
-                    <a  class="list-group-item list-group-item-action"><i
+            <!-- Sidebar -->
+            <div class="col" id="main-sidebar">
+                <div class="list-group list-group-flush">
+                    <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home fa-lg fa-fw"></i>
+                        Home</a>
+                    <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
+                            class="fa fa-th fa-lg fa-fw"></i> Categories</a>
+                    <div id="cat-blog">
+                    </div>
+                    <a class="list-group-item list-group-item-action"><i
                             class="fa fa-list fa-lg fa-fw"></i> Other</a>
                     <a href="/product/add/1" class="list-group-item list-group-item-action sub">Add product</a>
 
@@ -114,37 +115,43 @@
                             </div>
                         </nav>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="register" role="tabpanel" aria-labelledby="register-tab">
+                            <div class="tab-pane fade show active" id="register" role="tabpanel"
+                                 aria-labelledby="register-tab">
                                 <c:choose>
                                     <c:when test="${pageNumber == 1}">
                                         <div class="card shadow-sm">
                                             <div class="card-body">
-                                                <form action="/product/add/1" method="post" >
+                                                <form action="/product/add/1" method="post">
                                                     <div class="form-row">
                                                         <div class="form-group col-sm-6">
                                                             <label for="registerFirstName">Title</label>
-                                                            <input type="text" name="title" class="form-control" id="registerFirstName">
+                                                            <input type="text" name="title" class="form-control"
+                                                                   id="registerFirstName">
                                                             <c:if test="${titleError != null}">
                                                                 <span style="color: red">${titleError}</span>
                                                             </c:if>
                                                         </div>
                                                         <div class="form-group col-sm-6">
                                                             <label for="registerLastName">Price</label>
-                                                            $<input type="text" name="price" class="form-control" id="registerLastName">
+                                                            $<input type="text" name="price" class="form-control"
+                                                                    id="registerLastName">
                                                             <c:if test="${priceError != null}">
                                                                 <span style="color: red">${priceError}</span>
                                                             </c:if>
                                                         </div>
                                                         <div class="form-group col-sm-6">
                                                             <label for="registerEmail">Description</label>
-                                                            <textarea type="text" name="description" class="form-control" id="registerEmail"></textarea>
+                                                            <textarea type="text" name="description"
+                                                                      class="form-control"
+                                                                      id="registerEmail"></textarea>
                                                             <c:if test="${descriptionError != null}">
                                                                 <span style="color: red">${descriptionError}</span>
                                                             </c:if>
                                                         </div>
                                                         <div class="form-group col-sm-6">
                                                             <label for="registerPhone">Quantity</label>
-                                                            <input type="text" name="quantity" class="form-control" id="registerPhone">
+                                                            <input type="text" name="quantity" class="form-control"
+                                                                   id="registerPhone">
                                                             <c:if test="${quantityError != null}">
                                                                 <span style="color: red">${quantityError}</span>
                                                             </c:if>
@@ -157,13 +164,17 @@
                                                             <c:forEach items="${categories}" var="category">
                                                                 <div class="custom-control custom-checkbox">
                                                                     <input type="checkbox" class="custom-control-input"
-                                                                           id="${category.id}" name="categories" value="${category.id}">
-                                                                    <label class="custom-control-label" for="${category.id}">${category.name}</label>
+                                                                           id="${category.id}" name="categories"
+                                                                           value="${category.id}">
+                                                                    <label class="custom-control-label"
+                                                                           for="${category.id}">${category.name}</label>
                                                                 </div>
                                                             </c:forEach>
                                                         </div>
                                                         <div class="form-group col-12">
-                                                            <button type="submit" class="btn btn-success btn-block">Add</button>
+                                                            <button type="submit" class="btn btn-success btn-block">
+                                                                Add
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -173,7 +184,8 @@
                                     <c:otherwise>
                                         <div class="card shadow-sm">
                                             <div class="card-body">
-                                                <form action="/product/add/2" method="post" enctype="multipart/form-data">
+                                                <form action="/product/add/2" method="post"
+                                                      enctype="multipart/form-data">
                                                     <c:if test="${attrError != null}">
                                                         <h4 style="color: red">${attrError}</h4>
                                                     </c:if>
@@ -181,12 +193,14 @@
                                                         <c:forEach items="${attributes}" var="attr">
                                                             <div class="form-group col-sm-6">
                                                                 <label for="${attr.id}">${attr.name}</label>
-                                                                <input type="text" name="${attr.id}" class="form-control" id="${attr.id}">
+                                                                <input type="text" name="${attr.id}"
+                                                                       class="form-control" id="${attr.id}">
                                                             </div>
                                                         </c:forEach>
                                                         <br/>
                                                         <div class="form-group col-sm-6">
-                                                            <input  type="file" name="image" id="file" class="inputfile" />
+                                                            <input type="file" name="image" id="file"
+                                                                   class="inputfile"/>
                                                             <label for="file">Choose a photo</label>
                                                             <br/>
                                                             <c:if test="${imageError != null}">
@@ -211,9 +225,13 @@
         </div>
     </div>
 </div>
-    <script src="/resources/plugins/jquery/jquery.min.js"></script>
-    <script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
-    <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/plugins/jquery/jquery.min.js"></script>
+<script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
+<script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/generic.js"></script>
+<c:if test="${user != null}">
+    <script src="/resources/js/product.js"></script>
+</c:if>
 </body>
 </html>

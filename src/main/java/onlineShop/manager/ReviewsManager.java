@@ -4,10 +4,7 @@ import lombok.Cleanup;
 import onlineShop.db.ConnectionProvider;
 import onlineShop.model.Reviews;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +57,17 @@ public class ReviewsManager {
 
     public void save(Reviews reviews){
         try {
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
+            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(INSERT,Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,reviews.getReviewText());
             preparedStatement.setInt(2,reviews.getUser().getId());
             preparedStatement.setInt(3,reviews.getProduct().getId());
             preparedStatement.setDouble(4,reviews.getRating());
             preparedStatement.setString(5,DATE_FORMAT.format(reviews.getSendDate()));
             preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()){
+                reviews.setId(resultSet.getInt(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException();

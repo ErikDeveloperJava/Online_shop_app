@@ -106,8 +106,8 @@
                     <c:if test="${u.id != user.id}">
                         <tr>
                             <td>
-                                <form action="/admin/user/delete" method="post">
-                                    <input type="hidden" name="userId" value="${u.id}">
+                                <form class="user-form" action="/admin/user/delete" method="post">
+                                    <input type="hidden" class="userId" value="${u.id}">
                                     <button type="submit" class="btn btn-sm btn-outline-warning rounded-circle" title="Remove"><i class="fa fa-close"></i></button>
                                 </form>
                             </td>
@@ -146,5 +146,6 @@
 <script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
 <script src="/resources/plugins/swiper/swiper.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/user.js"></script>
 </body>
 </html>

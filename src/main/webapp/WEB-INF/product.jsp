@@ -1,4 +1,5 @@
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,7 +18,7 @@
     <link rel="stylesheet" href="/resources/plugins/photoswipe/photoswipe-default-skin/default-skin.min.css">
     <link rel="stylesheet" href="/resources/dist/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>Porduct</title>
+    <title>Product</title>
 </head>
 <body>
 
@@ -100,10 +101,8 @@
                     Home</a>
                 <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
                         class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}"
-                       class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
+                <div id="cat-blog">
+                </div>
                 <a class="list-group-item list-group-item-action"><i
                         class="fa fa-list fa-lg fa-fw"></i> Other</a>
                 <c:if test="${user == null}">
@@ -148,7 +147,7 @@
                     <div class="img-detail-wrapper">
                         <img src="/resources/images/${product.imgUrl}" class="img-fluid px-5" id="img-detail"
                              alt="Responsive image" data-index="0">
-                        <div class="img-detail-list">
+                        <div id="image-blog" title="<%=((List)request.getAttribute("images")).size()%>" class="img-detail-list">
                             <a href="/resources/images/${product.imgUrl}" class="active"><img
                                     src="/resources/images/${product.imgUrl}"
                                     data-large-src="/resources/images/${product.imgUrl}" alt="Product"
@@ -200,8 +199,8 @@
                         </div>
                     </c:forEach>
                     <c:if test="${user != null && user.id != product.user.id}">
-                        <form action="/product/cart/add"  method="post">
-                            <input type="hidden" id="productId" value="${product.id}">
+                        <form action="/product/cart/add" class="cart-form"  method="post">
+                            <input type="hidden" class="productId" value="${product.id}">
                             <div class="form-group">
                                 <button id="cart-button" type="submit" class="btn btn-info btn-block">ADD TO CART</button>
                             </div>
@@ -220,7 +219,7 @@
                                 <button type="submit" class="btn btn-info btn-block">DELETE PRODUCT</button>
                             </div>
                         </form>
-                        <form action="/product/image/upload" method="post" enctype="multipart/form-data">
+                        <form id="image-upload" action="/product/image/upload" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="productId" value="${product.id}">
                             <div class="form-group">
                                 <input type="file" name="image" id="file" class="inputfile"/>
@@ -263,7 +262,7 @@
                                                                class="card-title h6">${product.title}</a>
                                                             <c:if test="${user == null || user.id != product.user.id}">
                                                                 <form class="cart-form" action="/product/cart/add" method="post">
-                                                                    <input type="hidden" class="cart-input"
+                                                                    <input type="hidden" class="productId"
                                                                            value="${product.id}">
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <button type="submit"
@@ -299,7 +298,7 @@
                                                                class="card-title h6">${product.title}</a>
                                                             <c:if test="${user == null || user.id != product.user.id}">
                                                                 <form action="/product/cart/add" class="cart-form" method="post">
-                                                                    <input type="hidden" class="cart-input"
+                                                                    <input type="hidden" class="productId"
                                                                            value="${product.id}">
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <button type="submit"
@@ -334,19 +333,20 @@
                         </div>
                     </div>
                     <!--reviews-->
-                    <c:forEach items="${reviewsList}" var="reviews">
-                        <div class="media">
-                            <img src="/resources/images/${reviews.user.imgUrl}" width="50" height="50" alt="John Thor"
-                                 class="rounded-circle">
-                            <div class="media-body ml-3">
-                                <h5 class="mb-0">${reviews.user.name} ${reviews.user.surname}</h5>
-                                <span class="rating text-secondary" data-value="${reviews.rating}"></span>
-                                <small class="ml-2">${dateFormat.format(reviews.sendDate)}</small>
-                                <p>${reviews.reviewText}</p>
+                    <div id="review-blog">
+                        <c:forEach items="${reviewsList}" var="reviews">
+                            <div class="media">
+                                <img src="/resources/images/${reviews.user.imgUrl}" width="50" height="50" alt="John Thor"
+                                     class="rounded-circle">
+                                <div class="media-body ml-3">
+                                    <h5 class="mb-0">${reviews.user.name} ${reviews.user.surname}</h5>
+                                    <span class="rating text-secondary" data-value="${reviews.rating}"></span>
+                                    <small class="ml-2">${dateFormat.format(reviews.sendDate)}</small>
+                                    <p>${reviews.reviewText}</p>
+                                </div>
                             </div>
-                        </div>
-                    </c:forEach>
-
+                        </c:forEach>
+                    </div>
                     <c:if test="${user == null || user.id != product.user.id}">
                         <div class="text-center">
                             <button type="button" class="btn btn-warning" data-toggle="modal"
@@ -380,7 +380,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div id="cart-blog" class="modal-body">
                     <c:forEach items="${cartProducts}" var="product">
                         <div class="media">
                             <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}"
@@ -395,9 +395,9 @@
                                         <button type="button" class="btn btn-light"></button>
                                     </div>
                                 </div>
-                                <span class="price">$${product.price}</span>
-                                <form action="/product/cart/delete" method="post">
-                                    <input type="hidden" name="productId" value="${product.id}">
+                                <span class="price" id="product-price">$${product.price}</span>
+                                <form class="cart-delete-form" action="/product/cart/delete" method="post">
+                                    <input type="hidden" class="productId" name="productId" value="${product.id}">
                                     <button type="submit" class="close" aria-label="Close"><i class="fa fa-trash-o"></i></button>
                                 </form>
                             </div>
@@ -406,7 +406,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="box-total">
-                        <h4>Subotal: <span class="price">$${sum}</span></h4>
+                        <h4>Subotal: <span class="price" id="subotal">$${sum}</span></h4>
                     </div>
                 </div>
             </div>
@@ -426,7 +426,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="/review/add" method="post">
+                <form id="review-form" action="/review/add" method="post">
                     <input type="hidden" name="productId" value="${product.id}">
                     <div class="modal-body">
                         <div class="form-group">
@@ -495,6 +495,12 @@
 <script src="/resources/plugins/photoswipe/photoswipe.min.js"></script>
 <script src="/resources/plugins/photoswipe/photoswipe-ui-default.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
-<script src="/resources/js/product.js"></script>
+<script src="/resources/js/generic.js"></script>
+<c:if test="${user != null}">
+    <script src="/resources/js/product.js"></script>
+</c:if>
+<c:if test="${user != null && user.id == product.user.id}">
+    <script src="/resources/js/upload-image.js"></script>
+</c:if>
 </body>
 </html>

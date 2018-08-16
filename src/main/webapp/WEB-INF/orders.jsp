@@ -63,7 +63,7 @@
         <li class="nav-item dropdown ml-1 ml-sm-3">
             <a href="grid.html#" class="nav-link" data-toggle="modal" data-target="#cartModal">
                 <i class="fa fa-shopping-cart fa-lg"></i>
-                <span class="badge badge-pink badge-count">${cartCount}</span>
+                <span id="cart-count" class="badge badge-pink badge-count">${cartCount}</span>
             </a>
         </li>
     </ul>
@@ -75,7 +75,7 @@
             <img src="/resources/images/${user.imgUrl}" width="40px" alt="User">
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-            <a class="dropdown-item has-icon" href="/user/orders"><i class="fa fa-shopping-bag fa-fw"></i> My Orders (${ordersCount})</a>
+            <a class="dropdown-item has-icon" href="/user/orders"><i class="fa fa-shopping-bag fa-fw"></i> <span id="order-count">My Orders (${ordersCount})</span></a>
             <%--<a class="dropdown-item has-icon" href="account-profile.html"><i class="fa fa-cog fa-fw"></i> Account Setting</a>--%>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item has-icon" href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -96,9 +96,8 @@
                     Home</a>
                 <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
                         class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}" class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
+                <div id="cat-blog">
+                </div>
                 <a  class="list-group-item list-group-item-action"><i
                         class="fa fa-list fa-lg fa-fw"></i> Other</a>
                 <a href="/product/add/1" class="list-group-item list-group-item-action sub">Add product</a>
@@ -121,7 +120,7 @@
 
         <div class="col" id="main-content">
 
-            <h3 class="title mb-3">you ordered ${ordersCount} products </h3>
+            <h3 id="order-title" class="title mb-3">you ordered ${ordersCount} products </h3>
 
             <!-- Shopping Cart Table -->
             <table class="table table-cart">
@@ -129,8 +128,8 @@
                 <c:forEach items="${orders}" var="order">
                     <tr>
                         <td>
-                            <form action="/product/order/delete" method="post">
-                                <input type="hidden" name="productId" value="${order.product.id}">
+                            <form class="delete-order-form" action="/product/order/delete" method="post">
+                                <input type="hidden" class="productId" value="${order.product.id}">
                                 <button type="submit" class="btn btn-sm btn-outline-warning rounded-circle" title="Remove"><i class="fa fa-close"></i></button>
                             </form>
                         </td>
@@ -171,50 +170,60 @@
     </div>
 </div>
 
+
 <!-- Modal Cart -->
-<div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">You have ${cartCount} items in your bag</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <c:forEach items="${cartProducts}" var="product">
-                    <div class="media">
-                        <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}" width="50" height="50" alt="NEW Microsoft Surface Go"></a>
-                        <div class="media-body">
-                            <a href="/product/one/${product.id}" title="NEW Microsoft Surface Go">${product.title}</a>
-                            <div class="input-spinner input-spinner-sm">
-                                <div class="btn-group-vertical">
-                                    <button type="button" class="btn btn-light"></button>
-                                    <button type="button" class="btn btn-light"></button>
+<c:if test="${user != null}">
+    <div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">You have ${cartCount} items in your bag</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="cart-blog" class="modal-body">
+                    <c:forEach items="${cartProducts}" var="product">
+                        <div class="media">
+                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}"
+                                                                      width="50" height="50"
+                                                                      alt="NEW Microsoft Surface Go"></a>
+                            <div class="media-body">
+                                <a href="/product/one/${product.id}"
+                                   title="NEW Microsoft Surface Go">${product.title}</a>
+                                <div class="input-spinner input-spinner-sm">
+                                    <div class="btn-group-vertical">
+                                        <button type="button" class="btn btn-light"></button>
+                                        <button type="button" class="btn btn-light"></button>
+                                    </div>
                                 </div>
+                                <span class="price" id="product-price">$${product.price}</span>
+                                <form class="cart-delete-form" action="/product/cart/delete" method="post">
+                                    <input type="hidden" class="productId" name="productId" value="${product.id}">
+                                    <button type="submit" class="close" aria-label="Close"><i class="fa fa-trash-o"></i></button>
+                                </form>
                             </div>
-                            <span class="price">$${product.price}</span>
-                            <form action="/product/cart/delete" method="post">
-                                <input type="hidden" name="productId" value="${product.id}">
-                                <button type="submit" class="close" aria-label="Close"><i class="fa fa-trash-o"></i></button>
-                            </form>
                         </div>
+                    </c:forEach>
+                </div>
+                <div class="modal-footer">
+                    <div class="box-total">
+                        <h4>Subotal: <span class="price" id="subotal">$${sum}</span></h4>
                     </div>
-                </c:forEach>
-            </div>
-            <div class="modal-footer">
-                <div class="box-total">
-                    <h4>Subotal: <span class="price">$${sum}</span></h4>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+</c:if>
 <script src="/resources/plugins/jquery/jquery.min.js"></script>
 <script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/resources/plugins/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
 <script src="/resources/plugins/swiper/swiper.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/generic.js"></script>
+<c:if test="${user != null}">
+    <script src="/resources/js/product.js"></script>
+</c:if>
 </body>
 </html>

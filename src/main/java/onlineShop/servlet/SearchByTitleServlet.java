@@ -22,8 +22,6 @@ public class SearchByTitleServlet extends HttpServlet implements Pages {
 
     private static final int PAGE_SIZE = 8;
 
-    private CategoryManager categoryManager;
-
     private ProductManager productManager;
 
     private ProductCartManager productCartManager;
@@ -32,7 +30,6 @@ public class SearchByTitleServlet extends HttpServlet implements Pages {
 
     @Override
     public void init() throws ServletException {
-        categoryManager = (CategoryManager) getServletContext().getAttribute("categoryManager");
         productManager = (ProductManager) getServletContext().getAttribute("productManager");
         productCartManager = (ProductCartManager) getServletContext().getAttribute("productCartManager");
         productOrderManager = (ProductOrderManager) getServletContext().getAttribute("productOrderManager");
@@ -51,7 +48,6 @@ public class SearchByTitleServlet extends HttpServlet implements Pages {
         req.setAttribute("title","result in search: " + title);
         req.setAttribute("pageNumber",pageNumber);
         req.setAttribute("length",length);
-        req.setAttribute("categories",categoryManager.getAll());
         if(user != null){
             req.setAttribute("cartCount",productCartManager.countByUserId(user.getId()));
             req.setAttribute("ordersCount",productOrderManager.countByUserId(user.getId()));

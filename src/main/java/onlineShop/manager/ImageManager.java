@@ -6,10 +6,7 @@ import onlineShop.form.ImageForm;
 import onlineShop.model.Image;
 import onlineShop.util.ImageUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +23,19 @@ public class ImageManager {
 
     public void save(Image image, ImageForm form){
         try {
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
+            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(INSERT,Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,image.getImage());
             preparedStatement.setInt(2,image.getProduct().getId());
             try {
                 ImageUtil.save(image.getProduct().getUser().getUsername() + "\\" + image.getProduct().getId(),
                         form.getName(),form.getBytes());
                 preparedStatement.execute();
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if(resultSet.next()){
+                    image.setId(resultSet.getInt(1));
+                }else {
+                    throw new RuntimeException("failed load generated keys");
+                }
             }catch (Exception e){
                 ImageUtil.delete(image.getImage());
                 ImageUtil.delete(image.getProduct().getUser().getUsername() + "\\" + image.getProduct().getId());

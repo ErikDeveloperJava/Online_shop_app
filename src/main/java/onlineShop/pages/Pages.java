@@ -19,4 +19,6 @@ public interface Pages {
     String CATEGORY_ADD = "/WEB-INF/admin/category_add.jsp";
 
     String CATEGORY_ATRR_ADD = "/WEB-INF/admin/add_category_attr.jsp";
+
+    String PRODUCTS = "/WEB-INF/products.jsp";
 }

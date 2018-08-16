@@ -1,7 +1,10 @@
 package onlineShop.servlet.product;
 
 import onlineShop.form.ImageForm;
-import onlineShop.manager.*;
+import onlineShop.manager.AttributeValueManager;
+import onlineShop.manager.ImageManager;
+import onlineShop.manager.ProductCategoryManager;
+import onlineShop.manager.ProductManager;
 import onlineShop.model.AttributeValue;
 import onlineShop.model.CategoryAttribute;
 import onlineShop.model.Product;
@@ -24,7 +27,6 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/product/add/2")
 public class AddProductServlet2 extends HttpServlet implements Pages {
 
-    private CategoryManager categoryManager;
 
     private ProductManager productManager;
 
@@ -36,7 +38,6 @@ public class AddProductServlet2 extends HttpServlet implements Pages {
 
     @Override
     public void init() throws ServletException {
-        categoryManager = (CategoryManager) getServletContext().getAttribute("categoryManager");
         productManager = (ProductManager) getServletContext().getAttribute("productManager");
         productCategoryManager = (ProductCategoryManager) getServletContext().getAttribute("productCategoryManager");
         attributeValueManager = (AttributeValueManager) getServletContext().getAttribute("attributeValueManager");
@@ -56,19 +57,16 @@ public class AddProductServlet2 extends HttpServlet implements Pages {
             ImageForm form = (ImageForm) req.getAttribute("form");
             List<AttributeValue> attributeValues = getAttributeValues(params, attributes, req);
             if (attributeValues.isEmpty()) {
-                req.setAttribute("categories", categoryManager.getAll());
                 req.setAttribute("attributes", attributes);
                 req.setAttribute("pageNumber", 2);
                 req.getRequestDispatcher(PRODUCT_ADD_PAGE1).forward(req, resp);
             } else if (form.getBytes().length == 0) {
                 req.setAttribute("imageError", "image file is empty");
-                req.setAttribute("categories", categoryManager.getAll());
                 req.setAttribute("attributes", attributes);
                 req.setAttribute("pageNumber", 2);
                 req.getRequestDispatcher(PRODUCT_ADD_PAGE1).forward(req, resp);
             } else if (!ImageUtil.isValidFormat(form.getContentType())) {
                 req.setAttribute("imageError", "invalid image format");
-                req.setAttribute("categories", categoryManager.getAll());
                 req.setAttribute("attributes", attributes);
                 req.setAttribute("pageNumber", 2);
                 req.getRequestDispatcher(PRODUCT_ADD_PAGE1).forward(req, resp);

@@ -5,6 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta id="isLoadCatBlog2"  content="true">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans">
     <link rel="stylesheet" href="/resources/plugins/_mod/bootstrap/css/bootstrap.css">
@@ -58,7 +59,7 @@
             <li class="nav-item dropdown ml-1 ml-sm-3">
                 <a href="grid.html#" class="nav-link" data-toggle="modal" data-target="#cartModal">
                     <i class="fa fa-shopping-cart fa-lg"></i>
-                    <span class="badge badge-pink badge-count">${cartCount}</span>
+                    <span id="cart-count" class="badge badge-pink badge-count">${cartCount}</span>
                 </a>
             </li>
         </c:if>
@@ -94,9 +95,8 @@
                     Home</a>
                 <a style="cursor: pointer" class="list-group-item list-group-item-action"><i
                         class="fa fa-th fa-lg fa-fw"></i> Categories</a>
-                <c:forEach items="${categories}" var="category" varStatus="cat">
-                    <a href="/category/${category.id}" class="list-group-item list-group-item-action sub">${category.name}</a>
-                </c:forEach>
+                <div id="cat-blog">
+                </div>
                 <a  class="list-group-item list-group-item-action"><i
                         class="fa fa-list fa-lg fa-fw"></i> Other</a>
                 <c:if test="${user == null}">
@@ -212,7 +212,8 @@
 
 <!-- Modal Cart -->
 <c:if test="${user != null}">
-    <div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal fade modal-cart" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -221,21 +222,24 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div id="cart-blog" class="modal-body">
                     <c:forEach items="${cartProducts}" var="product">
                         <div class="media">
-                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}" width="50" height="50" alt="NEW Microsoft Surface Go"></a>
+                            <a href="/product/one/${product.id}"><img src="/resources/images/${product.imgUrl}"
+                                                                      width="50" height="50"
+                                                                      alt="NEW Microsoft Surface Go"></a>
                             <div class="media-body">
-                                <a href="/product/one/${product.id}" title="NEW Microsoft Surface Go">${product.title}</a>
+                                <a href="/product/one/${product.id}"
+                                   title="NEW Microsoft Surface Go">${product.title}</a>
                                 <div class="input-spinner input-spinner-sm">
                                     <div class="btn-group-vertical">
                                         <button type="button" class="btn btn-light"></button>
                                         <button type="button" class="btn btn-light"></button>
                                     </div>
                                 </div>
-                                <span class="price">$${product.price}</span>
-                                <form action="/product/cart/delete" method="post">
-                                    <input type="hidden" name="productId" value="${product.id}">
+                                <span class="price" id="product-price">$${product.price}</span>
+                                <form class="cart-delete-form" action="/product/cart/delete" method="post">
+                                    <input type="hidden" class="productId" name="productId" value="${product.id}">
                                     <button type="submit" class="close" aria-label="Close"><i class="fa fa-trash-o"></i></button>
                                 </form>
                             </div>
@@ -244,14 +248,13 @@
                 </div>
                 <div class="modal-footer">
                     <div class="box-total">
-                        <h4>Subotal: <span class="price">$${sum}</span></h4>
+                        <h4>Subotal: <span class="price" id="subotal">$${sum}</span></h4>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </c:if>
-
 <!-- Modal filter -->
 <script src="/resources/plugins/jquery/jquery.min.js"></script>
 <script src="/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -259,5 +262,9 @@
 <script src="/resources/plugins/nouislider/nouislider.min.js"></script>
 <script src="/resources/plugins/raty-fa/jquery.raty-fa.min.js"></script>
 <script src="/resources/dist/js/script.js"></script>
+<script src="/resources/js/generic.js"></script>
+<c:if test="${user != null}">
+    <script src="/resources/js/product.js"></script>
+</c:if>
 </body>
 </html>

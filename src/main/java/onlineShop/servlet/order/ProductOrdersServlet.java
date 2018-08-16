@@ -19,7 +19,6 @@ public class ProductOrdersServlet extends HttpServlet implements Pages {
 
     private ProductManager productManager;
 
-    private CategoryManager categoryManager;
 
     private ProductCartManager productCartManager;
 
@@ -30,7 +29,6 @@ public class ProductOrdersServlet extends HttpServlet implements Pages {
     @Override
     public void init() throws ServletException {
         productManager = (ProductManager) getServletContext().getAttribute("productManager");
-        categoryManager = (CategoryManager) getServletContext().getAttribute("categoryManager");
         productCartManager = (ProductCartManager) getServletContext().getAttribute("productCartManager");
         productOrderManager = (ProductOrderManager) getServletContext().getAttribute("productOrderManager");
         attributeValueManager = (AttributeValueManager) getServletContext().getAttribute("attributeValueManager");
@@ -39,7 +37,6 @@ public class ProductOrdersServlet extends HttpServlet implements Pages {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
-        req.setAttribute("categories",categoryManager.getAll());
         req.setAttribute("cartCount",productCartManager.countByUserId(user.getId()));
         req.setAttribute("ordersCount",productOrderManager.countByUserId(user.getId()));
         List<Product> cartProducts = productManager.getAllCartProductByUserId(user.getId());

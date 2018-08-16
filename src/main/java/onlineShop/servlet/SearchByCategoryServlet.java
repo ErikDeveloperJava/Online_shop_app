@@ -53,7 +53,6 @@ public class SearchByCategoryServlet extends HttpServlet implements Pages {
         req.setAttribute("title","search by category: " + category.getName());
         req.setAttribute("pageNumber",pageNumber);
         req.setAttribute("length",length);
-        req.setAttribute("categories",categoryManager.getAll());
         if(user != null){
             req.setAttribute("cartCount",productCartManager.countByUserId(user.getId()));
             req.setAttribute("ordersCount",productOrderManager.countByUserId(user.getId()));

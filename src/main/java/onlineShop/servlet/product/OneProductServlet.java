@@ -16,9 +16,9 @@ import java.util.List;
 @WebServlet(urlPatterns = "/product/one/*")
 public class OneProductServlet extends HttpServlet implements Pages {
 
-    private ProductManager productManager;
-
     private CategoryManager categoryManager;
+
+    private ProductManager productManager;
 
     private ImageManager imageManager;
 
@@ -49,7 +49,6 @@ public class OneProductServlet extends HttpServlet implements Pages {
         if(productId == -1 || (product = productManager.getById(productId)) == null){
             resp.sendRedirect("/");
         }else {
-            req.setAttribute("categories",categoryManager.getAll());
             req.setAttribute("product",product);
             req.setAttribute("productCategories",categoryManager.getAllByProductId(productId));
             req.setAttribute("images",imageManager.getAllByProductId(productId));

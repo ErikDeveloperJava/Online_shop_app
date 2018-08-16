@@ -18,11 +18,8 @@ public class AuthenticationFilter extends AbstractFilter {
 
     private UserManager userManager;
 
-    private CategoryManager categoryManager;
-
     public void init(FilterConfig filterConfig) throws ServletException {
         userManager = (UserManager) filterConfig.getServletContext().getAttribute("userManager");
-        categoryManager = (CategoryManager) filterConfig.getServletContext().getAttribute("categoryManager");
     }
 
     public void filter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -33,7 +30,6 @@ public class AuthenticationFilter extends AbstractFilter {
             String password = request.getParameter("password");
             User user = userManager.getByUsername(username);
             if(user == null || !user.getPassword().equals(password)){
-                request.setAttribute("categories",categoryManager.getAll());
                 request.setAttribute("loginError","you entered wrong username or password");
                 request.getRequestDispatcher(LOGIN).forward(request,response);
             }else{
