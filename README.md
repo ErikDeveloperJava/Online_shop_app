@@ -1,1 +1,1 @@
-Project on Servlet/jsp
+Online shop app on Servlet/jsp
